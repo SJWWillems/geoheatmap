@@ -33,6 +33,8 @@
 #' @param dark_lbl,light_lbl colrs to be uses when the label should be dark or light.
 #'        The function automagically computes when this should be.
 #' @param radius the corner radius
+#' @param facet_col column name specifying the location names
+#' @param grid grid to plot data on
 #' @param na.rm If `FALSE`, the default, missing values are removed with
 #'   a warning. If `TRUE`, missing values are silently removed.
 #' @param ... other arguments passed on to `layer()`. These are
@@ -69,11 +71,13 @@
 #'   theme(plot.title=element_text(size=16, hjust=0)) +
 #'   theme(plot.margin = margin(30,30,30,30))
 #' }
-geom_statebins <- function(
+geom_geoheat <- function(
   mapping = NULL, data = NULL,
   border_col = "white", border_size = 2,
   lbl_size = 3, dark_lbl = "black", light_lbl = "white",
   radius = grid::unit(6, "pt"),
+  grid = NULL,
+  facet_col = NULL,
   ...,
   na.rm = FALSE, show.legend = NA, inherit.aes = TRUE) {
 
@@ -81,7 +85,7 @@ geom_statebins <- function(
     data = data,
     mapping = mapping,
     stat = "identity",
-    geom = GeomStatebins,
+    geom = GeomGeoHeat,
     position = "identity",
     show.legend = show.legend,
     inherit.aes = inherit.aes,
@@ -93,6 +97,8 @@ geom_statebins <- function(
       light_lbl = light_lbl,
       radius = radius,
       na.rm = na.rm,
+      grid = grid,
+      facet_col = facet_col,
       ...
     )
   )
@@ -100,49 +106,57 @@ geom_statebins <- function(
 
 #' @rdname geom_statebins
 #' @export
-GeomStatebins <- ggplot2::ggproto("GeomStatebins", ggplot2::Geom,
+GeomGeoHeat <- ggplot2::ggproto("GeomGeoHeat", ggplot2::Geom,
 
   default_aes = ggplot2::aes(
     fill = "grey20", colour = NA, size = 0.1, linetype = 1,
-    state = "state", label="abbrev", angle = 0, hjust = 0.5,
+    location = "name", label="code", ## ????
+    angle = 0, hjust = 0.5,
     vjust = 0.5, alpha = NA, family = "", fontface = 1, lineheight = 1.2
   ),
+
+
+  grid_data = grid, ## ???
 
   extra_params = c("na.rm", "width", "height"),
 
   setup_data = function(data, params) {
 
-    # message("setup_data()")
-    # saveRDS(data, "/tmp/data.rds")
 
-    state_data <- data.frame(data, stringsAsFactors=FALSE)
+    facet_data <- data.frame(data, stringsAsFactors=FALSE)
 
-    if (max(nchar(state_data[,"state"])) <= 3) {
-      merge.x <- "abbrev"
+    if (max(nchar(facet_data[,facet_col])) <= 3) {
+      merge.grid <- "code"
     } else {
-      merge.x <- "state"
+      merge.grid <- "name"
     }
 
-    state_data <- validate_states(state_data, "state", merge.x, ignore_dups=TRUE)
+    facet_data <- validate_facets(facet_data, grid_data, facet_col, merge.grid, ignore_dups=TRUE)
 
-    st.dat <- merge(b_state_coords, state_data,
-                    by.x=merge.x, by.y="state", all.y=TRUE, sort=TRUE)
+    # Rename rows and columns to x and y for panel coordinates. Flip row coordinates to start at bottom left.
+    colnames(grid_data) <- c("name", "code", "y", "x")
+    grid_data$y <- -grid_data$y
 
-    st.dat$width <- st.dat$width %||% params$width %||% ggplot2::resolution(st.dat$x, FALSE)
-    st.dat$height <- st.dat$height %||% params$height %||% ggplot2::resolution(st.dat$y, FALSE)
 
-    transform(st.dat,
+    merged_data <- merge(grid_data, facet_data,
+                         by.x = merge.grid, by.y = facet_col, all.x = TRUE, sort=TRUE)
+
+    # merged_data$width <- merged_data$width %||% params$width %||% ggplot2::resolution(merged_data$x, FALSE)
+    # merged_data$height <- merged_data$height %||% params$height %||% ggplot2::resolution(merged_data$y, FALSE)
+
+    merged_data$width <- 1
+    merged_data$height <- 1
+
+    transform(merged_data,
       xmin = x - width / 2,  xmax = x + width / 2,  width = NULL,
       ymin = y - height / 2, ymax = y + height / 2, height = NULL
-    ) -> xdat
+    ) -> plot_data
 
-    # saveRDS(xdat, "/tmp/setupdata.rds")
-
-    xdat
+    plot_data
 
   },
 
-  required_aes = c("state", "fill"),
+  required_aes = c("facet_col", "fill"),
 
   draw_panel = function(self, data, panel_params, coord,
                         border_col = "white", border_size = 2,
@@ -154,7 +168,7 @@ GeomStatebins <- ggplot2::ggproto("GeomStatebins", ggplot2::Geom,
     tile_data$size <- border_size
 
     text_data <- data
-    text_data$label <- data$abbrev
+    text_data$label <- data$code
     text_data$fill <- NA
     text_data$size <-  lbl_size
     text_data$colour <- .sb_invert(data$fill, dark_lbl, light_lbl)
@@ -166,7 +180,7 @@ GeomStatebins <- ggplot2::ggproto("GeomStatebins", ggplot2::Geom,
       ggplot2::GeomText$draw_panel(text_data, panel_params, coord)
     ) -> grobs
 
-    ggname("geom_statebins", grid::grobTree(children = grobs))
+    ggname("geom_geoheat", grid::grobTree(children = grobs))
 
   },
 

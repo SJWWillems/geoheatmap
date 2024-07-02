@@ -17,6 +17,28 @@
     )
 }
 
+# sanity checks for facet values
+validate_facets <- function(facet_data, grid_data, facet_col, merge.grid, ignore_dups=FALSE) {
+
+  good_facets <- facet_data[,facet_col] %in% grid_data[,merge.grid]
+  if (any(!good_facets)) {
+    # invalid <- facet_data[,facet_col][which(!good_facets)]
+    # facet_data <- facet_data[which(good_facets),]
+    # message("Found invalid state values: ", invalid)
+    message("Found facets that are not in the grid. Consider checking dataset.")
+  }
+
+  if (!ignore_dups) {
+    dups <- duplicated(facet_data[,facet_col])
+    if (any(dups)) {
+      facet_data <- facet_data[which(!dups),]
+      message("Removing duplicate facet rows.")
+    }
+  }
+
+  return(facet_data)
+
+}
 
 "%||%" <- function(a, b) { if (!is.null(a)) a else b }
 
