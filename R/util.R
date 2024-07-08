@@ -17,6 +17,34 @@
     )
 }
 
+# Merge user data with grid data
+
+mergeGridAndData <- function(facet_data, grid_data, facet_col)
+{
+
+  print(summary(facet_data))
+
+  if (max(nchar(facet_data[,"facet_col"])) <= 3) {
+    merge.grid <- "code"
+  } else {
+    merge.grid <- "name"
+  }
+
+  # facet_data <- validate_facets(facet_data, grid_data, facet_col, merge.grid, ignore_dups=TRUE)
+
+  # Rename rows and columns to x and y for panel coordinates. Flip row coordinates to start at bottom left.
+  colnames(grid_data) <- c("name", "code", "y", "x")
+
+
+  # merged_data <- merge(grid_data, facet_data,
+  #                      by.x = merge.grid, by.y = "facet_col", all.x = TRUE, sort=TRUE)
+  merged_data <- merge(grid_data, facet_data,
+                       by.x = merge.grid, by.y = "facet_col", all = FALSE, sort=TRUE) # remove all.x to deletecountries from grid without data
+
+  merged_data
+}
+
+
 # sanity checks for facet values
 validate_facets <- function(facet_data, grid_data, facet_col, merge.grid, ignore_dups=FALSE) {
 

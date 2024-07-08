@@ -77,7 +77,7 @@
 #'     position = "identity"
 #'   )
 #' }
-geom_tile <- function(mapping = NULL, data = NULL,
+geom_testtile <- function(mapping = NULL, data = NULL,
                       stat = "identity", position = "identity",
                       ...,
                       linejoin = "mitre",
@@ -105,11 +105,13 @@ geom_tile <- function(mapping = NULL, data = NULL,
 #' @usage NULL
 #' @export
 #' @include geom-rect.R
-GeomTile <- ggproto("GeomTile", GeomRect,
+GeomTestTile <- ggproto("GeomTestTile", GeomRect,
   extra_params = c("na.rm"),
 
   setup_data = function(data, params) {
-    
+
+
+
     data$width <- data$width %||% params$width %||%
       stats::ave(data$x, data$PANEL, FUN = function(x) resolution(x, FALSE, TRUE))
     data$height <- data$height %||% params$height %||%
