@@ -22,9 +22,7 @@
 mergeGridAndData <- function(facet_data, grid_data, facet_col)
 {
 
-  print(summary(facet_data))
-
-  if (max(nchar(facet_data[,"facet_col"])) <= 3) {
+  if (max(nchar(facet_data[,facet_col])) <= 3) {
     merge.grid <- "code"
   } else {
     merge.grid <- "name"
@@ -39,7 +37,7 @@ mergeGridAndData <- function(facet_data, grid_data, facet_col)
   # merged_data <- merge(grid_data, facet_data,
   #                      by.x = merge.grid, by.y = "facet_col", all.x = TRUE, sort=TRUE)
   merged_data <- merge(grid_data, facet_data,
-                       by.x = merge.grid, by.y = "facet_col", all = FALSE, sort=TRUE) # remove all.x to deletecountries from grid without data
+                       by.x = merge.grid, by.y = facet_col, all = FALSE, sort=TRUE) # remove all.x to deletecountries from grid without data
 
   merged_data
 }

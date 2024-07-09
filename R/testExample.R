@@ -5,9 +5,7 @@
 # - keep countries in grid that have NAs
 library(tidyverse)
 
-load("R/internet.rda")
-
-internet2015 <-internet2015 %>% filter(year == 2015)
+load("R/internet2015.RData")
 internet2015 <- internet2015[-192,]# fix later, error due to not-UTF-8 encoding
 
 internet2015 <-internet2015 %>% filter(!is.na(users))
@@ -17,7 +15,12 @@ facet_col <- "country"
 library(geofacet)
 grid_data <- africa_countries_grid1
 
+itworks= geoheat(facet_data= internet2015,
+        grid_data= grid_data,
+        facet_col = facet_col,
+        name="Internet Users")
 
+# statebins(USArrests, value_col="Assault", name = "Assault")
 
 ggplot(data = internet2015,
        mapping = aes(fill = users, facet_col = country)) +
