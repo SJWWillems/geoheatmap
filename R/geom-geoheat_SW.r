@@ -117,12 +117,16 @@ GeomGeoHeat <- ggproto("GeomGeoHeat", GeomTestTile,
     vjust = 0.5, alpha = NA, family = "", fontface = 1, lineheight = 1.2
   ),
 
-  extra_params = c("na.rm"),
+  extra_params = c("na.rm", "border_col",
+                   "border_size",
+                   "lbl_size", "dark_lbl", "light_lbl",
+                   "radius"),
 
 
   setup_data = function(data, params) {
 
-    facet_data <- data.frame(data, stringsAsFactors=FALSE)
+    # facet_data <- data.frame(data, stringsAsFactors=FALSE)
+    facet_data <- data
     facet_col <- facet_col
 
     # Merge user data with user-specified grid:
@@ -137,9 +141,9 @@ GeomGeoHeat <- ggproto("GeomGeoHeat", GeomTestTile,
     # merged_data$width <- merged_data$width %||% params$width %||% ggplot2::resolution(merged_data$x, FALSE)
     # merged_data$height <- merged_data$height %||% params$height %||% ggplot2::resolution(merged_data$y, FALSE)
 
-    # merged_data$width <- 1
-    # merged_data$height <- 1
-    #
+    merged_data$width <- 1
+    merged_data$height <- 1
+
     # transform(merged_data,
     #   xmin = x - width / 2,  xmax = x + width / 2,  width = NULL,
     #   ymin = y - height / 2, ymax = y + height / 2, height = NULL
@@ -156,16 +160,21 @@ GeomGeoHeat <- ggproto("GeomGeoHeat", GeomTestTile,
   },
 
 
-  draw_panel = function(self, data, panel_params, coord,
-                        border_col = "white", border_size = 2,
-                        lbl_size = 3, dark_lbl = "black", light_lbl = "white",
-                        radius = grid::unit(6, "pt")) {
-
-    print(head(data))
-
-    # coords <- coord$transform(data, panel_params)
-    # data$x <- coords$x
-    # data$y <- coords$y
+  # draw_panel = function(self, data, panel_params, coord,
+  #                       border_col = "white", border_size = 2,
+  #                       lbl_size = 3, dark_lbl = "black", light_lbl = "white",
+  #                       radius = grid::unit(6, "pt")) {
+  #
+  #   print(head(data))
+  #
+  #   coords <- coord$transform(data, panel_params)
+  #   # data$x <- coords$x
+  #   # data$y <- coords$y
+  #
+  #   grid::tileGrob(
+  #     coords$x, coords$y,
+  #     gp = grid::gpar(col = coords$colour)
+  #   )
 
     # tile_data <- data
     # tile_data$colour <- border_col
@@ -180,7 +189,7 @@ GeomGeoHeat <- ggproto("GeomGeoHeat", GeomTestTile,
     # text_data$colour <- .sb_invert(data$fill, dark_lbl, light_lbl)
 
 
-    coord <- coord_equal()
+    # coord <- coord_equal()
 
 
     # grid::gList(
@@ -191,20 +200,20 @@ GeomGeoHeat <- ggproto("GeomGeoHeat", GeomTestTile,
     #
     # ggname("geom_geoheat", grid::grobTree(children = grobs))
 
-default.units <- "native"
-
-print(length(data$x))
-print(length(data$y))
-
-
-    grid::gList(
-      GeomTestTile$draw_panel(data, panel_params, coord),
-      # GeomRtile$draw_panel(tile_data, panel_params, coord, radius),
-      ) -> grobs
-
-    ggname("geom_geoheat", grid::grobTree(children = grobs))
-
-  },
+# default.units <- "native"
+#
+# print(length(data$x))
+# print(length(data$y))
+#
+#
+#     grid::gList(
+#       GeomTestTile$draw_panel(data, panel_params, coord),
+#       # GeomRtile$draw_panel(tile_data, panel_params, coord, radius),
+#       ) -> grobs
+#
+#     ggname("geom_geoheat", grid::grobTree(children = grobs))
+#
+#   },
 
   draw_key = ggplot2::draw_key_polygon
 
