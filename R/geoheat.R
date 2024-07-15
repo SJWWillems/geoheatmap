@@ -41,14 +41,15 @@
 #' USArrests$state <- rownames(USArrests)
 #' statebins(USArrests, value_col="Assault", name = "Assault") +
 #'   theme_statebins(legend_position="right")
-geoheat <- function(facet_data,
-                    grid_data,
-                    facet_col="code", value_col="users",
+geoheat <- function(facet_data= NULL,
+                    grid_data=NULL,
+                    facet_col= NULL, value_col= NULL,
                     dark_label="black", light_label="white",
                     na_label="white", font_size=3,
                     state_border_col="white", state_border_size=2,
-                    round=FALSE, radius=grid::unit(6, "pt"),
-                    ggplot2_scale_function=ggplot2::scale_fill_distiller,
+                    round= FALSE, radius=grid::unit(6, "pt"),
+                    ggplot2_scale_function=ggplot2::scale_fill_continuous,
+                    # low= "yellow", high= "red",
                     ...) {
 
   facet_data <- data.frame(facet_data, stringsAsFactors=FALSE)
@@ -86,6 +87,8 @@ geoheat <- function(facet_data,
 
   gb <- ggplot2::ggplot_build(gg)
 
+
+  # play with as a separate layer to see if user-specified colours work
   gg <- gg + geom_text(data = merged_data,
                        aes_string(x = "x", y = "y", label = "code"),
                        angle = 0,
