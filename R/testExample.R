@@ -93,3 +93,4 @@ ggplot(data = data,
        mapping = aes(fill = usage, facet_col = country))  +
   geom_geoheat()
 
+# a change to see whether this only gets into my own branch
