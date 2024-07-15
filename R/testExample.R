@@ -56,6 +56,10 @@ sun+ theme_void()+
 ggplotly(p= sun, tooltip= "fill",
          layer_data= 2)
 
+itworks +
+  theme_void() +
+  scale_fill_gradient(low = "yellow", high = "red")
+
 # statebins(USArrests, value_col="Assault", name = "Assault")
 
 ggplot(data = internet2015,
