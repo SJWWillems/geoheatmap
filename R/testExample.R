@@ -4,6 +4,7 @@
 # - error due to not-UTF-8 encoding
 # - keep countries in grid that have NAs
 library(tidyverse)
+library(ggplot2)
 
 load("R/internet2015.RData")
 internet2015 <- internet2015[-192,]# fix later, error due to not-UTF-8 encoding
@@ -11,14 +12,49 @@ internet2015 <- internet2015[-192,]# fix later, error due to not-UTF-8 encoding
 internet2015 <-internet2015 %>% filter(!is.na(users))
 
 facet_data <- internet2015
-facet_col <- "country"
 library(geofacet)
-grid_data <- africa_countries_grid1
 
-itworks= geoheat(facet_data= internet2015,
-        grid_data= grid_data,
-        facet_col = facet_col,
-        name="Internet Users")
+ita_reg_ann_data= read_csv("R/ita_reg_ann_data.csv")
+italy_provinces= ita_reg_ann_data
+italy_provinces= italy_provinces %>%
+  mutate(den_reg = ifelse(den_reg == "Trentino Alto Adige", "Trentino-Alto Adige",
+                              ifelse(den_reg == "Friuli Venezia Giulia", "Friuli-Venezia Giulia", den_reg)))
+
+europe= europe_countries_grid2
+africa= africa_countries_grid1
+
+facet_col <- "den_reg"
+grid_data= italy_grid1
+facet_data= italy_provinces
+
+example= geoheat(facet_data= internet2015,
+        grid_data= europe,
+        facet_col = "country",
+        value_col = "users",
+        name= "users",
+        round= TRUE)
+
+example+
+  theme_void()+
+  scale_fill_gradient(low= "red", high= "yellow")
+
+sun= geoheat(facet_data= italy_provinces,
+        grid_data= italy_grid1,
+        value_col= "num_teams",
+        facet_col= "den_reg",
+        name= "num_teams",
+        round= TRUE,
+        radius= grid::unit(6, "pt"),
+        low= "pink",
+        high= "purple")
+
+sun+ theme_void()+
+  labs(title= "Italy provinces")
+
+
+# plotly only works with round= FALSE as geom_GeomRtile() is not yet implemented in plotly
+ggplotly(p= sun, tooltip= "fill",
+         layer_data= 2)
 
 itworks +
   theme_void() +
@@ -50,6 +86,7 @@ grid_data <- data.frame(
 
 facet_data <- data
 facet_col <- "country"
+
 
 # Example usage
 ggplot(data = data,

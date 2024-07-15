@@ -31,13 +31,17 @@ mergeGridAndData <- function(facet_data, grid_data, facet_col)
   # facet_data <- validate_facets(facet_data, grid_data, facet_col, merge.grid, ignore_dups=TRUE)
 
   # Rename rows and columns to x and y for panel coordinates. Flip row coordinates to start at bottom left.
-  colnames(grid_data) <- c("name", "code", "y", "x")
+  # colnames(grid_data) <- c("name", "code", "y", "x")
+
+    names(grid_data)[names(grid_data) == "row"] <- "y"
+    names(grid_data)[names(grid_data) == "col"] <- "x"
+
 
 
   # merged_data <- merge(grid_data, facet_data,
   #                      by.x = merge.grid, by.y = "facet_col", all.x = TRUE, sort=TRUE)
   merged_data <- merge(grid_data, facet_data,
-                       by.x = merge.grid, by.y = facet_col, all = FALSE, sort=TRUE) # remove all.x to deletecountries from grid without data
+                       by.x = merge.grid, by.y = facet_col, all.x= TRUE, all.y = FALSE, sort=TRUE) # remove all.x to deletecountries from grid without data
 
   merged_data
 }
