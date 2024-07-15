@@ -4,6 +4,7 @@
 library(tidyverse)
 library(ggplot2)
 library(geofacet)
+library(plotly)
 
 ###############################################################################
 # GEOHEAT FUNCTION
@@ -99,13 +100,25 @@ pretzel= geoheat(facet_data= german_states,
                      name= "density",
                  ggplot2_scale_function = scale_fill_manual,
                  values = c("Low" = "#edf8b1", "Medium" = "#7fcdbb", "High" = "#2c7fb8"),
-                     round= TRUE)
+                     round= F)
 
 pretzel+
   theme_void() +
   labs(title= "Population Density in German states") +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+  theme(plot.title= element_text(hjust = 0.5, face= "bold"))
 
+test_plotly= ggplotly(p= pretzel, tooltip= "fill")
+
+clean_plotly= test_plotly %>%
+  layout(
+    yaxis= list(showgrid = FALSE),  # Remove y-axis gridlines
+    xaxis= list(showgrid = FALSE),  # Remove x-axis gridlines
+    plot_bgcolor= "white",          # Set plot background color
+    paper_bgcolor= "lavender"       # Set paper background color (around axes ticks)
+    # ...
+  )
+
+clean_plotly
 
 
 itworks +
