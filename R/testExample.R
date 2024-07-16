@@ -5,6 +5,7 @@ library(tidyverse)
 library(ggplot2)
 library(geofacet)
 library(plotly)
+library(readr)
 
 ###############################################################################
 # GEOHEAT FUNCTION
@@ -12,24 +13,16 @@ load("R/internet2015.RData")
 internet2015= internet2015[-192,]# fix later, error due to not-UTF-8 encoding
 internet2015= internet2015 %>% filter(!is.na(users))
 
-ita_reg_ann_data= read_csv("R/ita_reg_ann_data.csv")
-italy_provinces= ita_reg_ann_data
-italy_provinces= italy_provinces %>%
-  mutate(den_reg = ifelse(den_reg == "Trentino Alto Adige", "Trentino-Alto Adige",
-                              ifelse(den_reg == "Friuli Venezia Giulia", "Friuli-Venezia Giulia", den_reg)))
-
 euroexample= geoheat(facet_data= internet2015,
         grid_data= europe_countries_grid1,
         facet_col = "country",
         value_col = "users",
         name= "users",
-        round= TRUE,
-        low= "red", high= "yellow")
+        round= F,
+        low= "red", high= "yellow",
+        hover= T)
 
-euroexample+
-  theme_void() +
-  labs(title= "Internet Use by European countries") +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+euroexample
 
 
 brasil_airports= read_csv("R/airports.csv")
@@ -49,18 +42,24 @@ brasil+
 # :)
 # this would probably be much better binned, see below for german example
 
+ita_reg_ann_data= read_csv("R/ita_reg_ann_data.csv")
+italy_provinces= ita_reg_ann_data
+italy_provinces= italy_provinces %>%
+  mutate(den_reg = ifelse(den_reg == "Trentino Alto Adige", "Trentino-Alto Adige",
+                          ifelse(den_reg == "Friuli Venezia Giulia", "Friuli-Venezia Giulia", den_reg)))
+
 sun= geoheat(facet_data= italy_provinces,
         grid_data= italy_grid1,
         value_col= "num_teams",
         facet_col= "den_reg",
-        name= "num_teams",
-        round= TRUE,
+        name= "Football teams",
+        round= F,
         radius= grid::unit(6, "pt"),
         low= "pink",
-        high= "purple")
+        high= "purple",
+        hover= TRUE)
 
-sun+ theme_void()+
-  labs(title= "Italy provinces")
+sun
 
 
 # plotly only works with round= FALSE as geom_GeomRtile() is not yet implemented in plotly
@@ -72,16 +71,17 @@ german_states= read_csv("R/german_states.csv")
 
 # ask sanne abt this... can we somehow select the grid column that we want for mergeing?
 # for now, manually use german names region name
-de_states_reimagined= de_states_grid1
-
-# have to use base r...
-# remove the original 'name' column
-if ("name" %in% colnames(de_states_reimagined)) {
-  de_states_reimagined= de_states_reimagined[, !colnames(de_states_reimagined) == "name", drop = FALSE]
-}
-
-# rename 'name_de' column to 'name'
-colnames(de_states_reimagined)[colnames(de_states_reimagined) == "name_de"]= "name"
+# de_states_grid1
+# de_states_reimagined= de_states_grid1
+#
+# # have to use base r...
+# # remove the original 'name' column
+# if ("name" %in% colnames(de_states_reimagined)) {
+#   de_states_reimagined= de_states_reimagined[, !colnames(de_states_reimagined) == "name", drop = FALSE]
+# }
+#
+# # rename 'name_de' column to 'name'
+# colnames(de_states_reimagined)[colnames(de_states_reimagined) == "name_de"]= "name"
 
 # binning
 german_states= german_states %>%
@@ -94,13 +94,14 @@ german_states= german_states %>%
   )
 
 pretzel= geoheat(facet_data= german_states,
-                     grid_data= de_states_reimagined,
-                     facet_col = "name",
-                     value_col = "density_bin",
-                     name= "density",
+                 grid_data= de_states_grid1,
+                 facet_col = "name",
+                 value_col = "density_bin",
+                 merge_col = "name_de",
+                 name= "Density",
                  ggplot2_scale_function = scale_fill_manual,
                  values = c("Low" = "#edf8b1", "Medium" = "#7fcdbb", "High" = "#2c7fb8"),
-                     round= F)
+                 round= F)
 
 pretzel+
   theme_void() +

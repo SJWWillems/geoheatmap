@@ -41,43 +41,54 @@
 #' USArrests$state <- rownames(USArrests)
 #' statebins(USArrests, value_col="Assault", name = "Assault") +
 #'   theme_statebins(legend_position="right")
-geoheat <- function(facet_data= NULL,
-                    grid_data=NULL,
-                    facet_col= NULL, value_col= NULL,
-                    dark_label="black", light_label="white",
-                    na_label="white", font_size=3,
-                    state_border_col="white", state_border_size=2,
-                    round= FALSE, radius=grid::unit(6, "pt"),
-                    ggplot2_scale_function=ggplot2::scale_fill_continuous,
-                    # low= "yellow", high= "red",
+geoheat <- function(facet_data = NULL,
+                    grid_data = NULL,
+                    facet_col = NULL,
+                    value_col = NULL,
+                    merge_col = NULL,  # New argument for merge column
+                    dark_label = "black",
+                    light_label = "white",
+                    na_label = "white",
+                    font_size = 3,
+                    state_border_col = "white",
+                    state_border_size = 2,
+                    round = FALSE,
+                    radius = grid::unit(6, "pt"),
+                    ggplot2_scale_function = ggplot2::scale_fill_continuous,
+                    hover = FALSE,  # New argument for enabling hover information
                     ...) {
 
-  facet_data <- data.frame(facet_data, stringsAsFactors=FALSE)
+  facet_data <- data.frame(facet_data, stringsAsFactors = FALSE)
 
   # Ensure facet_col is properly defined
   facet_col <- facet_col
 
-  if (max(nchar(facet_data[,facet_col])) <= 3) {
-    merge.grid <- "code"
+  # Determine merge.grid based on merge_col if specified
+  if (!is.null(merge_col)) {
+    merge.grid <- merge_col
   } else {
-    merge.grid <- "name"
+    if (max(nchar(facet_data[, facet_col])) <= 3) {
+      merge.grid <- "code"
+    } else {
+      merge.grid <- "name"
+    }
   }
 
-  facet_data <- validate_facets(facet_data, grid_data, facet_col, merge.grid, ignore_dups=TRUE)
+  facet_data <- validate_facets(facet_data, grid_data, facet_col, merge.grid, ignore_dups = TRUE)
 
   # Merge user data with user-specified grid:
-  merged_data <- mergeGridAndData(facet_data, grid_data, facet_col)
+  merged_data <- mergeGridAndData(facet_data, grid_data, facet_col, merge_grid = merge.grid)
 
   gg <- ggplot()
 
   if (round) {
     gg <- gg + geom_rtile(data = merged_data, radius = radius,
-                          aes_string(x = "x", y = "y", fill = value_col),
+                          aes(x = !!rlang::sym("x"), y = !!rlang::sym("y"), fill = !!rlang::sym(value_col)),
                           color = state_border_col, size = state_border_size)
   } else {
     gg <- gg + geom_tile(data = merged_data,
-                         aes_string(x = "x", y = "y", fill = value_col),
-                         color = state_border_col, size = state_border_size)
+                         aes(x = !!rlang::sym("x"), y = !!rlang::sym("y"), fill = !!rlang::sym(value_col)),
+                         color = state_border_col, linewidth = state_border_size)
   }
 
   gg <- gg + scale_y_reverse()
@@ -87,13 +98,21 @@ geoheat <- function(facet_data= NULL,
 
   gb <- ggplot2::ggplot_build(gg)
 
-
-  # play with as a separate layer to see if user-specified colours work
   gg <- gg + geom_text(data = merged_data,
-                       aes_string(x = "x", y = "y", label = "code"),
+                       aes(x = !!rlang::sym("x"), y = !!rlang::sym("y"), label = !!rlang::sym("code")),
                        angle = 0,
                        color = .sb_invert(gb$data[[1]]$fill, dark_label, light_label, na_label),
                        size = font_size)
 
-  gg
+
+  if (hover) {
+    p <- ggplotly(gg, tooltip = "fill")
+    p <- p %>% layout(xaxis = list(visible = FALSE),   # Remove x-axis
+                      yaxis = list(visible = FALSE),   # Remove y-axis
+                      plot_bgcolor = 'rgba(0,0,0,0)',  # Remove plot background
+                      paper_bgcolor = 'rgba(0,0,0,0)') # Remove paper background
+    return(p)
+  } else {
+    return(gg)
+  }
 }
