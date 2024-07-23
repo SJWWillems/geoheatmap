@@ -1,13 +1,13 @@
-#' Base statebins theme
+#' Base geoheat theme
 #'
-#' Clears out most of the cruft. Builds off of `theme_bw()`
+#' @source Builds off of `theme_statebins()`, which builds off of `theme_bw()`
 #'
 #' @md
 #' @param legend_position fills in `legend.position`
 #' @param base_family,base_size same as `theme_bw()`
 #' @export
-theme_statebins <- function(legend_position="bottom",
-                            base_size = 11,
+theme_geoheat <- function(legend_position="right",
+                            base_size = 12,
                             base_family = "") {
 
   gg <- theme_bw(base_size = base_size, base_family = base_family)
@@ -24,7 +24,7 @@ theme_statebins <- function(legend_position="bottom",
     legend.justification = c(0, 0),
     legend.position = legend_position
   )
-  gg <- gg + theme(strip.background = element_rect(color="#2b2b2b", fill="white"))
+  gg <- gg + theme(strip.background = element_rect(color="#2b2b2b", fill="white")) #?
   gg <- gg + theme(plot.title=element_text(hjust=0.5, angle=0))
   gg <- gg + theme(axis.title.x=element_text(hjust=0.5, angle=0))
   gg <- gg + theme(legend.position=legend_position)
