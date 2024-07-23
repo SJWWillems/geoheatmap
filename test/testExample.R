@@ -53,13 +53,13 @@ sun= geoheat(facet_data= italy_provinces,
         value_col= "num_teams",
         facet_col= "den_reg",
         name= "Football teams",
-        round= F,
+        round= T,
         radius= grid::unit(6, "pt"),
         low= "pink",
         high= "purple",
-        hover= TRUE)
+        hover= T)
 
-sun
+sun + theme(legend.position = "none")
 
 
 # plotly only works with round= FALSE as geom_GeomRtile() is not yet implemented in plotly

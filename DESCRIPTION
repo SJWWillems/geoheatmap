@@ -1,11 +1,18 @@
-Package: cartoheatmap
+Package: geoheatmap
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Create Geospatial Cartogram Heatmaps
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Authors@R: c(
+    person("Sanne", "Willems", email = "s.j.w.willems@fsw.leidenuniv.nl", role = c("aut", "cre"))
+    person("Maria", "Rados", email = "m.rados@umail.leidenuniv.nl", role = c("aut", "cre"),
+           comment = "..."),
+    person("Juan", "Claramunt Gonzalez", email = "j.claramunt.gonzalez@fsw.leidenuniv.nl", role = "ctb",
+           comment = "package development expertise and guidance"),
+  )
+Maintainer: Sanne Willems <s.j.w.willems@fsw.leidenuniv.nl>
+Description: The functionality provided by this package is an expansion of the code 
+    by creators of the `statebins` package. It allows for the creation of square choropleths 
+    for the entire world, provided an appropriate specified grid is supplied. 
+License: MIT License
 Encoding: UTF-8
 LazyData: true

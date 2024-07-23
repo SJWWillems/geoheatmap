@@ -1,61 +1,69 @@
-#' Create a new ggplot-based "statebin" chart for USA states/territories
+#' Create a new ggplot-based "geoheat" map for a user-specified geographical grid.
 #'
-#' Pass in a data frame and get back a square choropleth.
+#' Pass in desired data frame and grid and get back a square choropleth. The function takes
+#' inspiration from the `statebins` function, modifying it to allow for non-US grids and territories.
 #'
-#' The `state_col` and `value_col` parameters default to `state` and `value`. That means
-#' if you name the columns you want to plot with those names, you can forego passing them
-#' in. Othersise, use `"strings"`.
+#' @seealso \code{\link[statebins]{statebins}}
 #'
-#' A _handy_ feature of this function is that you can specify a `dark_label` color
-#' and a `light_label` color. What does that mean? Well, you also pass in the
-#' color scale function you're going to use and `statebins` will apply it and use
-#' that information to determine what the tile color is and --- if it's "dark" it will
-#' use the `light_label` and if it's "light" it will use the `dark_label` color. That
-#' means the labels will never blend in to the background (as long as you specify
-#' decent label colors).
+#' Like in the statebins package, we offer the option to specify a `dark_label` color
+#' and a `light_label` color. Depending on the selected colour scale function,
+#' `geoheat` will use that information to determine what label to use on lighter/darker tiles.
+#' This should in principle mean that labels never fade into the background.
+#' Note that this only applies if colours are defined within function,
+#' i.e. not called after the object has already been created.
 #'
 #' You can customize the scale function you pass in by using name parameters. All named
-#' parameters not used by `statebins()` itself get passed to the scale function.
+#' parameters not used by `geoheat()` itself get passed to the scale function.
 #'
 #' @md
-#' @param state_data data frame of states and values to plot
-#' @param state_col column name in \code{state_data} that has the states. no duplicates
-#'        and can be names (e.g. "\code{Maine}") or abbreviatons (e.g. "\code{ME}")
-#' @param value_col column name in \code{state_data} that holds the values to be plotted
+#' @param facet_data data frame of facets (geographical locations) and values to plot
+#' @param grid_data data frame of matching geographical grid positions
+#' @param facet_col column name in \code{facet_data} that holds the facets. No duplicates;
+#'        can be full names (e.g. "\code{Netherlands}") or abbreviations (e.g. "\code{NL}")
+#' @param value_col column name in \code{facet_data} that holds the values to be plotted
+#' @param merge_col grids can sometimes hold both native and anglophone language geographical names
+#'                  (e.g. "\code{Bayern/Bavaria}". If native option is preferable, use `merge_col`;
+#'                  defaults to "\code{name}".
 #' @param dark_label,light_label,na_label dark/light/NA label colors. The specified color will be used
 #'        when the algorithm determines labels should be inverted.
 #' @param font_size font size (default = \code{3})
-#' @param state_border_col default "\code{white}" - this creates the "spaces" between boxes
-#' @param state_border_size border size
+#' @param facet_border_col default "\code{white}" - this creates the "spaces" between boxes
+#' @param facet_border_size border size
 #' @param round rounded corners (default: `FALSE`)
 #' @param radius if `round` is `TRUE` then use `grid::unit` to specify the corner radius.
 #'        Default is `grid::unit(6, "pt")` if using rounded corners.
-#' @param ggplot2_scale_function ggplot2 scale function to use. Defaults to `scale_fill_distiller`
-#'        since you're likely passing in continuous data when you shouldn't be :-)
+#' @param ggplot2_scale_function ggplot2 scale function to use. Defaults to `scale_fill_continuous`
+#' @param hover if `hover` is `TRUE`, enables interactive plotly plot (see also \code{\link[ggplotly]{plotly}}).
+#' Note it only works when `round` is set to `FALSE`.
 #' @param ... additional parameters to the scale function
 #' @return ggplot2 object
 #' @export
 #' @examples
-#' data(USArrests)
+#' data(internet2015)
 #'
-#' USArrests$state <- rownames(USArrests)
-#' statebins(USArrests, value_col="Assault", name = "Assault") +
-#'   theme_statebins(legend_position="right")
+#' geoheat(facet_data= internet2015, grid_data= europe_countries_grid1,
+#'                     facet_col = "country", value_col = "users")
+#' @references
+#' Bob Rudis. (2022). statebins: Create United States Uniform Cartogram Heatmaps. R package version 1.4.0.
+#'   URL: \url{https://CRAN.R-project.org/package=statebins}
+#'
+#' Ryan Hafen. (2018). geofacet: 'ggplot2' Faceting Utilities for Geographical Data.
+#'   R package version 0.2.1. URL: \url{https://CRAN.R-project.org/package=geofacet}
 geoheat <- function(facet_data = NULL,
                     grid_data = NULL,
                     facet_col = NULL,
                     value_col = NULL,
-                    merge_col = NULL,  # New argument for merge column
+                    merge_col = NULL,
                     dark_label = "black",
                     light_label = "white",
                     na_label = "white",
                     font_size = 3,
-                    state_border_col = "white",
-                    state_border_size = 2,
+                    facet_border_col = "white",
+                    facet_border_size = 2,
                     round = FALSE,
                     radius = grid::unit(6, "pt"),
                     ggplot2_scale_function = ggplot2::scale_fill_continuous,
-                    hover = FALSE,  # New argument for enabling hover information
+                    hover = FALSE,
                     ...) {
 
   facet_data <- data.frame(facet_data, stringsAsFactors = FALSE)
@@ -84,17 +92,19 @@ geoheat <- function(facet_data = NULL,
   if (round) {
     gg <- gg + geom_rtile(data = merged_data, radius = radius,
                           aes(x = !!rlang::sym("x"), y = !!rlang::sym("y"), fill = !!rlang::sym(value_col)),
-                          color = state_border_col, size = state_border_size)
+                          color = facet_border_col, size = facet_border_size)
   } else {
     gg <- gg + geom_tile(data = merged_data,
                          aes(x = !!rlang::sym("x"), y = !!rlang::sym("y"), fill = !!rlang::sym(value_col)),
-                         color = state_border_col, linewidth = state_border_size)
+                         color = facet_border_col, linewidth = facet_border_size)
   }
 
   gg <- gg + scale_y_reverse()
   gg <- gg + ggplot2_scale_function(...)
   gg <- gg + coord_equal()
   gg <- gg + labs(x = NULL, y = NULL)
+
+
 
   gb <- ggplot2::ggplot_build(gg)
 
@@ -103,6 +113,8 @@ geoheat <- function(facet_data = NULL,
                        angle = 0,
                        color = .sb_invert(gb$data[[1]]$fill, dark_label, light_label, na_label),
                        size = font_size)
+
+  gg <- gg + theme_void()
 
 
   if (hover) {
