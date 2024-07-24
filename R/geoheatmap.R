@@ -1,4 +1,4 @@
-#' Create a new ggplot-based "geoheat" map for a user-specified geographical grid.
+#' Create a new ggplot-based "geoheatmap" map for a user-specified geographical grid.
 #'
 #' Pass in desired data frame and grid and get back a square choropleth. The function takes
 #' inspiration from the `statebins` function, modifying it to allow for non-US grids and territories.
@@ -7,13 +7,13 @@
 #'
 #' Like in the statebins package, we offer the option to specify a `dark_label` color
 #' and a `light_label` color. Depending on the selected colour scale function,
-#' `geoheat` will use that information to determine what label to use on lighter/darker tiles.
+#' `geoheatmap` will use that information to determine what label to use on lighter/darker tiles.
 #' This should in principle mean that labels never fade into the background.
 #' Note that this only applies if colours are defined within function,
 #' i.e. not called after the object has already been created.
 #'
 #' You can customize the scale function you pass in by using name parameters. All named
-#' parameters not used by `geoheat()` itself get passed to the scale function.
+#' parameters not used by `geoheatmap()` itself get passed to the scale function.
 #'
 #' @md
 #' @param facet_data data frame of facets (geographical locations) and values to plot
@@ -33,15 +33,22 @@
 #' @param radius if `round` is `TRUE` then use `grid::unit` to specify the corner radius.
 #'        Default is `grid::unit(6, "pt")` if using rounded corners.
 #' @param ggplot2_scale_function ggplot2 scale function to use. Defaults to `scale_fill_continuous`
-#' @param hover if `hover` is `TRUE`, enables interactive plotly plot (see also \code{\link[ggplotly]{plotly}}).
+#' @param hover if `hover` is `TRUE`, enables interactive plotly plot (see also \code{\link[plotly]{plotly}}).
 #' Note it only works when `round` is set to `FALSE`.
 #' @param ... additional parameters to the scale function
 #' @return ggplot2 object
+#' @import geofacet
+#' @import statebins
+#' @import ggplot2
+#' @importFrom plotly ggplotly
+#' @importFrom rlang sym
 #' @export
 #' @examples
 #' data(internet2015)
+#' library(geofacet)
+#' library(ggplot2)
 #'
-#' geoheat(facet_data= internet2015, grid_data= europe_countries_grid1,
+#' geoheatmap(facet_data= internet2015, grid_data= europe_countries_grid1,
 #'                     facet_col = "country", value_col = "users")
 #' @references
 #' Bob Rudis. (2022). statebins: Create United States Uniform Cartogram Heatmaps. R package version 1.4.0.
@@ -49,7 +56,7 @@
 #'
 #' Ryan Hafen. (2018). geofacet: 'ggplot2' Faceting Utilities for Geographical Data.
 #'   R package version 0.2.1. URL: \url{https://CRAN.R-project.org/package=geofacet}
-geoheat <- function(facet_data = NULL,
+geoheatmap <- function(facet_data = NULL,
                     grid_data = NULL,
                     facet_col = NULL,
                     value_col = NULL,
@@ -91,11 +98,11 @@ geoheat <- function(facet_data = NULL,
 
   if (round) {
     gg <- gg + geom_rtile(data = merged_data, radius = radius,
-                          aes(x = !!rlang::sym("x"), y = !!rlang::sym("y"), fill = !!rlang::sym(value_col)),
+                          aes(x = !!sym("x"), y = !!sym("y"), fill = !!sym(value_col)),
                           color = facet_border_col, size = facet_border_size)
   } else {
     gg <- gg + geom_tile(data = merged_data,
-                         aes(x = !!rlang::sym("x"), y = !!rlang::sym("y"), fill = !!rlang::sym(value_col)),
+                         aes(x = !!sym("x"), y = !!sym("y"), fill = !!sym(value_col)),
                          color = facet_border_col, linewidth = facet_border_size)
   }
 
@@ -109,7 +116,7 @@ geoheat <- function(facet_data = NULL,
   gb <- ggplot2::ggplot_build(gg)
 
   gg <- gg + geom_text(data = merged_data,
-                       aes(x = !!rlang::sym("x"), y = !!rlang::sym("y"), label = !!rlang::sym("code")),
+                       aes(x = !!sym("x"), y = !!sym("y"), label = !!sym("code")),
                        angle = 0,
                        color = .sb_invert(gb$data[[1]]$fill, dark_label, light_label, na_label),
                        size = font_size)
