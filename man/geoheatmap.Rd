@@ -53,7 +53,7 @@ Default is \code{grid::unit(6, "pt")} if using rounded corners.}
 
 \item{ggplot2_scale_function}{ggplot2 scale function to use. Defaults to \code{scale_fill_continuous}}
 
-\item{hover}{if \code{hover} is \code{TRUE}, enables interactive plotly plot (see also \code{\link[plotly]{plotly}}).
+\item{hover}{if \code{hover} is \code{TRUE}, enables interactive plotly plot (see also \code{\link[plotly]{ggplotly}}).
 Note it only works when \code{round} is set to \code{FALSE}.}
 
 \item{...}{additional parameters to the scale function}
@@ -66,11 +66,12 @@ Pass in desired data frame and grid and get back a square choropleth. The functi
 inspiration from the \code{statebins} function, modifying it to allow for non-US grids and territories.
 }
 \examples{
-data(internet2015)
+data(internet)
 library(geofacet)
 library(ggplot2)
 
-geoheatmap(facet_data= internet2015, grid_data= europe_countries_grid1,
+internet_2015 <- subset(internet, year == 2015)
+geoheatmap(facet_data= internet_2015, grid_data= europe_countries_grid1,
                     facet_col = "country", value_col = "users")
 }
 \references{

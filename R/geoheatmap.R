@@ -33,7 +33,7 @@
 #' @param radius if `round` is `TRUE` then use `grid::unit` to specify the corner radius.
 #'        Default is `grid::unit(6, "pt")` if using rounded corners.
 #' @param ggplot2_scale_function ggplot2 scale function to use. Defaults to `scale_fill_continuous`
-#' @param hover if `hover` is `TRUE`, enables interactive plotly plot (see also \code{\link[plotly]{plotly}}).
+#' @param hover if `hover` is `TRUE`, enables interactive plotly plot (see also \code{\link[plotly]{ggplotly}}).
 #' Note it only works when `round` is set to `FALSE`.
 #' @param ... additional parameters to the scale function
 #' @return ggplot2 object
@@ -44,11 +44,12 @@
 #' @importFrom rlang sym
 #' @export
 #' @examples
-#' data(internet2015)
+#' data(internet)
 #' library(geofacet)
 #' library(ggplot2)
 #'
-#' geoheatmap(facet_data= internet2015, grid_data= europe_countries_grid1,
+#' internet_2015 <- subset(internet, year == 2015)
+#' geoheatmap(facet_data= internet_2015, grid_data= europe_countries_grid1,
 #'                     facet_col = "country", value_col = "users")
 #' @references
 #' Bob Rudis. (2022). statebins: Create United States Uniform Cartogram Heatmaps. R package version 1.4.0.
