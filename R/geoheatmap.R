@@ -62,8 +62,6 @@
 #'
 #' Ryan Hafen. (2018). geofacet: 'ggplot2' Faceting Utilities for Geographical Data.
 #'   R package version 0.2.1. URL: \url{https://CRAN.R-project.org/package=geofacet}
-
-
 geoheatmap <- function(facet_data = NULL,
                     grid_data = NULL,
                     facet_col = NULL,

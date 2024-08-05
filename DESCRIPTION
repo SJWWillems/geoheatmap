@@ -6,7 +6,7 @@ Authors@R: c(
     person("Sanne", "Willems", email = "s.j.w.willems@fsw.leidenuniv.nl", role = c("aut")),
     person("Maria", "Rados", email = "m.rados@umail.leidenuniv.nl", role = c("cre","aut")),
     person("Juan", "Claramunt Gonzalez", email = "j.claramunt.gonzalez@fsw.leidenuniv.nl", role = "ctb"))
-Maintainer: Sanne Willems <s.j.w.willems@fsw.leidenuniv.nl>
+Maintainer: Maria Rados <m.rados@umail.leidenuniv.nl>
 Description: The functionality provided by this package is an expansion of the code 
     by creators of the `statebins` package. It allows for the creation of square choropleths 
     for the entire world, provided an appropriate specified grid is supplied. 
@@ -14,7 +14,6 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Imports: geofacet, statebins, ggplot2, plotly, rlang
 Suggests: knitr, rmarkdown
-VignetteBuilder: knitr
 LazyData: true
 RoxygenNote: 7.2.3
 Depends: 

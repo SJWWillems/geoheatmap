@@ -14,15 +14,12 @@
 #'   \item{\code{year}}{year in which data was recorded in.}
 #'   \item{\code{users}}{amount of population with active internet usage, expressed in percentage.}
 #'  }
-<<<<<<< HEAD
 #'
 #' @source The World Bank. (2024). Internet Users (\% of population) [Data file]. Retrieved from https://data.worldbank.org/indicator/IT.NET.USER.ZS
-=======
 #' @details
 #' Dataset contains a country name ("Democratic Republic of Korea") that has a encoding that does not comply with the UTF-8, so this observation is
 #' removed from the dataset to avoid encoding issues in the example.
 #' @source The World Bank Group. (2024). Internet Users (\% of population) [Data file]. Retrieved from https://data.worldbank.org/indicator/IT.NET.USER.ZS
->>>>>>> 0389c16872b02aac5b8ffbbd38f08c35912ffa8a
 #' @references International Telecommunication Union (ITU). (2024). ITU data (World Telecommunication/ICT Indicators Database) used in World Bank compilation.
 "internet"
 
