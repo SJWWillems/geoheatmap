@@ -14,12 +14,12 @@
 #'   \item{\code{year}}{year in which data was recorded in.}
 #'   \item{\code{users}}{amount of population with active internet usage, expressed in percentage.}
 #'  }
-#'
-#' @source The World Bank Group. (2024). Internet Users (percentage of population) [Data file]. Retrieved from https://data.worldbank.org/indicator/IT.NET.USER.ZS
+#' @details
+#' Dataset contains a country name that has a encoding that does not comply with the UTF-8, so this observation is
+#' removed from the dataset to avoid encoding issues in the example.
+#' @source The World Bank Group. (2024). Internet Users (\% of population) [Data file]. Retrieved from https://data.worldbank.org/indicator/IT.NET.USER.ZS
 #' @references International Telecommunication Union (ITU). (2024). ITU data (World Telecommunication/ICT Indicators Database) used in World Bank compilation.
+
 "internet"
 
-# changed "%" to "percentage" in source, so that link will show.
-# important (as stated by their licence): we need to indicate any changes we made, so list them here; i.e. which country we removed and why (and add "for more
-# details see data-raw/internet.R)
-# Is this the exact reference they requested?
+
