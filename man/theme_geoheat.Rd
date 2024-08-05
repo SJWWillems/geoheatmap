@@ -17,3 +17,4 @@ theme_geoheat(legend_position = "right", base_size = 12, base_family = "")
 \description{
 Base geoheat theme
 }
+

@@ -6,6 +6,10 @@
 #' @param legend_position fills in `legend.position`
 #' @param base_family,base_size same as `theme_bw()`
 #' @export
+#'
+#' @details
+#' Maybe add details on what the main changes are? And is it used by default by the geofacet package?
+#'
 theme_geoheat <- function(legend_position="right",
                             base_size = 12,
                             base_family = "") {

@@ -14,7 +14,11 @@ A data frame with 7101 observations (long format) on the following 3 variables:
  }
 }
 \source{
+<<<<<<< HEAD
 The World Bank. (2024). Internet Users (\% of population) [Data file]. Retrieved from https://data.worldbank.org/indicator/IT.NET.USER.ZS
+=======
+The World Bank. (2024). Internet Users (percentage of population) [Data file]. Retrieved from https://data.worldbank.org/indicator/IT.NET.USER.ZS
+>>>>>>> 0389c16872b02aac5b8ffbbd38f08c35912ffa8a
 }
 \usage{
 internet

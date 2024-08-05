@@ -1,9 +1,11 @@
-#' Create a new ggplot-based "geoheatmap" map for a user-specified geographical grid.
+#' Create a new ggplot-based geographical heatmap for a user-specified geographical grid
 #'
 #' Pass in desired data frame and grid and get back a square choropleth. The function takes
-#' inspiration from the `statebins` function, modifying it to allow for non-US grids and territories.
+#' inspiration from the `statebins` function, modifying it to allow for non-US grids and territories,
+#'  e.g. as defined in the `geofacet` package.
+#' The output is a ggplot2 object to which additional layers can be added.
 #'
-#' @seealso \code{\link[statebins]{statebins}}
+#' @details
 #'
 #' Like in the statebins package, we offer the option to specify a `dark_label` color
 #' and a `light_label` color. Depending on the selected colour scale function,
@@ -14,6 +16,9 @@
 #'
 #' You can customize the scale function you pass in by using name parameters. All named
 #' parameters not used by `geoheatmap()` itself get passed to the scale function.
+#'
+#' @seealso \code{\link[statebins]{statebins}} \code{\link[geofacet]{geofacet}}
+#'
 #'
 #' @md
 #' @param facet_data data frame of facets (geographical locations) and values to plot
@@ -57,6 +62,8 @@
 #'
 #' Ryan Hafen. (2018). geofacet: 'ggplot2' Faceting Utilities for Geographical Data.
 #'   R package version 0.2.1. URL: \url{https://CRAN.R-project.org/package=geofacet}
+
+
 geoheatmap <- function(facet_data = NULL,
                     grid_data = NULL,
                     facet_col = NULL,
