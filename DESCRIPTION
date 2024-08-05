@@ -19,3 +19,17 @@ LazyData: true
 RoxygenNote: 7.2.3
 Depends: 
     R (>= 2.10)
+Collate: 
+    'aaa.R'
+    'geoheat.R'
+    'geoheatmap.R'
+    'geom-geoheat_SW.r'
+    'geom-rrect.r'
+    'geom-rtile.R'
+    'geom-rect.R'
+    'geom-tile.R'
+    'gutil.R'
+    'internet.R'
+    'testExample_SW.R'
+    'theme-geoheat.R'
+    'util.R'

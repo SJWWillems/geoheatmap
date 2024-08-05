@@ -1,9 +1,28 @@
-#' Create a new ggplot-based "geoheatmap" map for a user-specified geographical grid.
+#' Create a new ggplot-based "geoheatmap" map for a user-specified geographical grid
+#'
+#'  # suggestion title:
+#'  # Create a new ggplot-based geographical heatmap for a user-specified geographical grid
 #'
 #' Pass in desired data frame and grid and get back a square choropleth. The function takes
-#' inspiration from the `statebins` function, modifying it to allow for non-US grids and territories.
+#' inspiration from the `statebins` function, modifying it to allow for non-US grids and territories,
+#'  e.g. as defined in the `geofacet` package.
+#' The output is a ggplot2 object to which additional layers can be added.
+#' # added some extra details
 #'
-#' @seealso \code{\link[statebins]{statebins}}
+#' @details
+#'
+#' # Add info as details instead of "see also"?
+#' Like in the statebins package, we offer the option to specify a `dark_label` color
+#' and a `light_label` color. Depending on the selected colour scale function,
+#' `geoheatmap` will use that information to determine what label to use on lighter/darker tiles.
+#' This should in principle mean that labels never fade into the background.
+#' Note that this only applies if colours are defined within function,
+#' i.e. not called after the object has already been created.
+#'
+#' You can customize the scale function you pass in by using name parameters. All named
+#' parameters not used by `geoheatmap()` itself get passed to the scale function.
+#'
+#' @seealso \code{\link[statebins]{statebins}} \code{\link[geofacet]{geofacet}}
 #'
 #' Like in the statebins package, we offer the option to specify a `dark_label` color
 #' and a `light_label` color. Depending on the selected colour scale function,
@@ -57,6 +76,8 @@
 #'
 #' Ryan Hafen. (2018). geofacet: 'ggplot2' Faceting Utilities for Geographical Data.
 #'   R package version 0.2.1. URL: \url{https://CRAN.R-project.org/package=geofacet}
+
+
 geoheatmap <- function(facet_data = NULL,
                     grid_data = NULL,
                     facet_col = NULL,
