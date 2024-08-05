@@ -15,11 +15,10 @@
 #'   \item{\code{users}}{amount of population with active internet usage, expressed in percentage.}
 #'  }
 #' @details
-#' Dataset contains a country name that has a encoding that does not comply with the UTF-8, so this observation is
+#' Dataset contains a country name ("Democratic Republic of Korea") that has a encoding that does not comply with the UTF-8, so this observation is
 #' removed from the dataset to avoid encoding issues in the example.
 #' @source The World Bank Group. (2024). Internet Users (\% of population) [Data file]. Retrieved from https://data.worldbank.org/indicator/IT.NET.USER.ZS
 #' @references International Telecommunication Union (ITU). (2024). ITU data (World Telecommunication/ICT Indicators Database) used in World Bank compilation.
-
 "internet"
 
 
