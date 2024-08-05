@@ -127,7 +127,7 @@ geoheatmap <- function(facet_data = NULL,
 
   if (hover) {
     p <- ggplotly(gg, tooltip = "fill")
-    p <- p %>% layout(xaxis = list(visible = FALSE),   # Remove x-axis
+    p <- plotly::layout(p= p, xaxis = list(visible = FALSE),   # Remove x-axis
                       yaxis = list(visible = FALSE),   # Remove y-axis
                       plot_bgcolor = 'rgba(0,0,0,0)',  # Remove plot background
                       paper_bgcolor = 'rgba(0,0,0,0)') # Remove paper background

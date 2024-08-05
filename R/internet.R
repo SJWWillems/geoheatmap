@@ -15,6 +15,6 @@
 #'   \item{\code{users}}{amount of population with active internet usage, expressed in percentage.}
 #'  }
 #'
-#' @source The World Bank. (2024). Internet Users (% of population) [Data file]. Retrieved from https://data.worldbank.org/indicator/IT.NET.USER.ZS
+#' @source The World Bank. (2024). Internet Users (\% of population) [Data file]. Retrieved from https://data.worldbank.org/indicator/IT.NET.USER.ZS
 #' @references International Telecommunication Union (ITU). (2024). ITU data (World Telecommunication/ICT Indicators Database) used in World Bank compilation.
 "internet"
