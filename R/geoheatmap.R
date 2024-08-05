@@ -17,6 +17,9 @@
 #' You can customize the scale function you pass in by using name parameters. All named
 #' parameters not used by `geoheatmap()` itself get passed to the scale function.
 #'
+#' The default theme is set to `theme_void()`, but this can be either overwritten,
+#' or added onto depending on intended plot purposes.
+#'
 #' @seealso \code{\link[statebins]{statebins}} \code{\link[geofacet]{geofacet}}
 #'
 #'

@@ -20,12 +20,9 @@ Depends:
     R (>= 2.10)
 Collate: 
     'aaa.R'
-    'geoheat.R'
     'geoheatmap.R'
     'geom-rrect.r'
     'geom-rtile.R'
-    'geom-rect.R'
-    'geom-tile.R'
     'gutil.R'
     'internet.R'
     'theme-geoheat.R'
