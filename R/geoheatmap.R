@@ -11,7 +11,6 @@
 #'
 #' @details
 #'
-#' # Add info as details instead of "see also"?
 #' Like in the statebins package, we offer the option to specify a `dark_label` color
 #' and a `light_label` color. Depending on the selected colour scale function,
 #' `geoheatmap` will use that information to determine what label to use on lighter/darker tiles.
@@ -24,15 +23,6 @@
 #'
 #' @seealso \code{\link[statebins]{statebins}} \code{\link[geofacet]{geofacet}}
 #'
-#' Like in the statebins package, we offer the option to specify a `dark_label` color
-#' and a `light_label` color. Depending on the selected colour scale function,
-#' `geoheatmap` will use that information to determine what label to use on lighter/darker tiles.
-#' This should in principle mean that labels never fade into the background.
-#' Note that this only applies if colours are defined within function,
-#' i.e. not called after the object has already been created.
-#'
-#' You can customize the scale function you pass in by using name parameters. All named
-#' parameters not used by `geoheatmap()` itself get passed to the scale function.
 #'
 #' @md
 #' @param facet_data data frame of facets (geographical locations) and values to plot
