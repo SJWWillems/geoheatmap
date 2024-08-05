@@ -1,13 +1,9 @@
-#' Create a new ggplot-based "geoheatmap" map for a user-specified geographical grid
-#'
-#'  # suggestion title:
-#'  # Create a new ggplot-based geographical heatmap for a user-specified geographical grid
+#' Create a new ggplot-based geographical heatmap for a user-specified geographical grid
 #'
 #' Pass in desired data frame and grid and get back a square choropleth. The function takes
 #' inspiration from the `statebins` function, modifying it to allow for non-US grids and territories,
 #'  e.g. as defined in the `geofacet` package.
 #' The output is a ggplot2 object to which additional layers can be added.
-#' # added some extra details
 #'
 #' @details
 #'
