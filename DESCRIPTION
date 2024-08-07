@@ -13,7 +13,12 @@ Description: The functionality provided by this package is an expansion of the c
 License: MIT + file LICENSE
 Encoding: UTF-8
 Imports: geofacet, statebins, ggplot2, plotly, rlang
-Suggests: knitr, rmarkdown
+VignetteBuilder:  knitr 
+Suggests: 
+    knitr,
+    rmarkdown,
+    viridisLite,
+    testthat (>= 3.0.0)
 LazyData: true
 RoxygenNote: 7.2.3
 Depends: 
@@ -25,5 +30,5 @@ Collate:
     'geom-rtile.R'
     'gutil.R'
     'internet.R'
-    'theme-geoheat.R'
     'util.R'
+Config/testthat/edition: 3

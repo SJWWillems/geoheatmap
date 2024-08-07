@@ -2,7 +2,7 @@
 % Please edit documentation in R/geoheatmap.R
 \name{geoheatmap}
 \alias{geoheatmap}
-\title{Create a new ggplot-based "geoheatmap" map for a user-specified geographical grid.}
+\title{Create a new ggplot-based geographical heatmap for a user-specified geographical grid}
 \usage{
 geoheatmap(
   facet_data = NULL,
@@ -63,7 +63,23 @@ ggplot2 object
 }
 \description{
 Pass in desired data frame and grid and get back a square choropleth. The function takes
-inspiration from the \code{statebins} function, modifying it to allow for non-US grids and territories.
+inspiration from the \code{statebins} function, modifying it to allow for non-US grids and territories,
+e.g. as defined in the \code{geofacet} package.
+The output is a ggplot2 object to which additional layers can be added.
+}
+\details{
+Like in the statebins package, we offer the option to specify a \code{dark_label} color
+and a \code{light_label} color. Depending on the selected colour scale function,
+\code{geoheatmap} will use that information to determine what label to use on lighter/darker tiles.
+This should in principle mean that labels never fade into the background.
+Note that this only applies if colours are defined within function,
+i.e. not called after the object has already been created.
+
+You can customize the scale function you pass in by using name parameters. All named
+parameters not used by \code{geoheatmap()} itself get passed to the scale function.
+
+The default theme is set to \code{theme_void()}, but this can be either overwritten,
+or added onto depending on intended plot purposes.
 }
 \examples{
 data(internet)
@@ -82,15 +98,5 @@ Ryan Hafen. (2018). geofacet: 'ggplot2' Faceting Utilities for Geographical Data
 R package version 0.2.1. URL: \url{https://CRAN.R-project.org/package=geofacet}
 }
 \seealso{
-\code{\link[statebins]{statebins}}
-
-Like in the statebins package, we offer the option to specify a \code{dark_label} color
-and a \code{light_label} color. Depending on the selected colour scale function,
-\code{geoheatmap} will use that information to determine what label to use on lighter/darker tiles.
-This should in principle mean that labels never fade into the background.
-Note that this only applies if colours are defined within function,
-i.e. not called after the object has already been created.
-
-You can customize the scale function you pass in by using name parameters. All named
-parameters not used by \code{geoheatmap()} itself get passed to the scale function.
+\code{\link[statebins]{statebins}} \code{\link[geofacet]{geofacet}}
 }
