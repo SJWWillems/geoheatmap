@@ -1,4 +1,3 @@
-context("basic plotting functionality")
 test_that("a plot gets produced", {
 
   require(ggplot2)

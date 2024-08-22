@@ -66,28 +66,26 @@
 #' Ryan Hafen. (2018). geofacet: 'ggplot2' Faceting Utilities for Geographical Data.
 #'   R package version 0.2.1. URL: \url{https://CRAN.R-project.org/package=geofacet}
 geoheatmap <- function(facet_data = NULL,
-                    grid_data = NULL,
-                    facet_col = NULL,
-                    value_col = NULL,
-                    merge_col = NULL,
-                    dark_label = "black",
-                    light_label = "white",
-                    na_label = "white",
-                    font_size = 3,
-                    facet_border_col = "white",
-                    facet_border_size = 2,
-                    round = FALSE,
-                    radius = grid::unit(6, "pt"),
-                    ggplot2_scale_function = ggplot2::scale_fill_continuous,
-                    hover = FALSE,
-                    ...) {
+                       grid_data = NULL,
+                       facet_col = NULL,
+                       value_col = NULL,
+                       merge_col = NULL,
+                       dark_label = "black",
+                       light_label = "white",
+                       na_label = "white",
+                       font_size = 3,
+                       facet_border_col = "white",
+                       facet_border_size = 2,
+                       round = FALSE,
+                       radius = grid::unit(6, "pt"),
+                       hover = FALSE,
+                       ggplot2_scale_function = ggplot2::scale_fill_continuous,
+                       ...) {
 
   facet_data <- data.frame(facet_data, stringsAsFactors = FALSE)
 
-  # Ensure facet_col is properly defined
   facet_col <- facet_col
 
-  # Determine merge.grid based on merge_col if specified
   if (!is.null(merge_col)) {
     merge.grid <- merge_col
   } else {
@@ -100,27 +98,29 @@ geoheatmap <- function(facet_data = NULL,
 
   facet_data <- validate_facets(facet_data, grid_data, facet_col, merge.grid, ignore_dups = TRUE)
 
-  # Merge user data with user-specified grid:
   merged_data <- mergeGridAndData(facet_data, grid_data, facet_col, merge_grid = merge.grid)
+
+  # Hover text concatenation
+  merged_data$hover_text <- paste("Location: ", merged_data$name, "<br>Value: ", merged_data[[value_col]])
 
   gg <- ggplot()
 
   if (round) {
-    gg <- gg + geom_rtile(data = merged_data, radius = radius,
-                          aes(x = !!sym("x"), y = !!sym("y"), fill = !!sym(value_col)),
-                          color = facet_border_col, size = facet_border_size)
+    gg <- suppressWarnings(gg + geom_rtile(data = merged_data, radius = radius,
+                                           aes(x = !!sym("x"), y = !!sym("y"), fill = !!sym(value_col),
+                                               text = hover_text),
+                                           color = facet_border_col, size = facet_border_size))
   } else {
-    gg <- gg + geom_tile(data = merged_data,
-                         aes(x = !!sym("x"), y = !!sym("y"), fill = !!sym(value_col)),
-                         color = facet_border_col, linewidth = facet_border_size)
+    gg <- suppressWarnings(gg + geom_tile(data = merged_data,
+                                          aes(x = !!sym("x"), y = !!sym("y"), fill = !!sym(value_col),
+                                              text = hover_text),
+                                          color = facet_border_col, linewidth = facet_border_size))
   }
 
   gg <- gg + scale_y_reverse()
   gg <- gg + ggplot2_scale_function(...)
   gg <- gg + coord_equal()
   gg <- gg + labs(x = NULL, y = NULL)
-
-
 
   gb <- ggplot2::ggplot_build(gg)
 
@@ -132,13 +132,13 @@ geoheatmap <- function(facet_data = NULL,
 
   gg <- gg + theme_void()
 
-
   if (hover) {
-    p <- ggplotly(gg, tooltip = "fill")
-    p <- plotly::layout(p= p, xaxis = list(visible = FALSE),   # Remove x-axis
-                      yaxis = list(visible = FALSE),   # Remove y-axis
-                      plot_bgcolor = 'rgba(0,0,0,0)',  # Remove plot background
-                      paper_bgcolor = 'rgba(0,0,0,0)') # Remove paper background
+    p <- ggplotly(gg, tooltip = "text")
+
+    p <- plotly::layout(p = p, xaxis = list(visible = FALSE),    # Remove x-axis
+                        yaxis = list(visible = FALSE),           # Remove y-axis
+                        plot_bgcolor = 'rgba(0,0,0,0)',          # Remove plot background
+                        paper_bgcolor = 'rgba(0,0,0,0)')         # Remove paper background
     return(p)
   } else {
     return(gg)
