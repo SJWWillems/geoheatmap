@@ -78,8 +78,8 @@ geoheatmap <- function(facet_data = NULL,
                        facet_border_size = 2,
                        round = FALSE,
                        radius = grid::unit(6, "pt"),
-                       hover = FALSE,
                        ggplot2_scale_function = ggplot2::scale_fill_continuous,
+                       hover = FALSE,
                        ...) {
 
   facet_data <- data.frame(facet_data, stringsAsFactors = FALSE)
@@ -108,12 +108,12 @@ geoheatmap <- function(facet_data = NULL,
   if (round) {
     gg <- suppressWarnings(gg + geom_rtile(data = merged_data, radius = radius,
                                            aes(x = !!sym("x"), y = !!sym("y"), fill = !!sym(value_col),
-                                               text = hover_text),
+                                               text = .data$hover_text),
                                            color = facet_border_col, size = facet_border_size))
   } else {
     gg <- suppressWarnings(gg + geom_tile(data = merged_data,
                                           aes(x = !!sym("x"), y = !!sym("y"), fill = !!sym(value_col),
-                                              text = hover_text),
+                                              text = .data$hover_text),
                                           color = facet_border_col, linewidth = facet_border_size))
   }
 
