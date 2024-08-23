@@ -14,6 +14,17 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r positioning of logo, echo= FALSE, warning=FALSE}
+library(knitr)
+
+logo_path <- system.file("internal/geoheatmap.png", package = "geoheatmap")
+logo_uri <- image_uri(logo_path)
+htmltools::img(src = logo_uri, 
+               alt = 'logo', 
+               style = 'position:absolute; top:17px; right:17px; width:170px; border:none; outline:none')
+```
+
+
 The geoheatmap R package aims to provide an easy way for building cartogram heatmaps for regions worldwide. 
 
 We took inspiration from the aesthetically made graphs in [statebins](https://github.com/hrbrmstr/statebins), and extended on its functionality by allowing for user-defined grids, which means that the cartogram heatmaps can now represent territories outside the US. Though any well-defined grid will technically work, grids from  [geofacet](https://github.com/hafen/geofacet) are an excellent starting point.
@@ -23,8 +34,6 @@ We took inspiration from the aesthetically made graphs in [statebins](https://gi
 
 ```{r, eval= FALSE}
 install.packages("geoheatmap")
-# or from github:
-# remotes::install_github()? if it's available
 ```
 
 ```{r setup, message=FALSE}
