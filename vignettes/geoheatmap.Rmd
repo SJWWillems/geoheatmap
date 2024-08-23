@@ -59,6 +59,8 @@ one + labs(title = "2015 Internet Usage in Europe")
 ```
 This graph shows a gradient internet usage across Europe. Though most countries are well above the halfway mark of population internet use, highest percentages can be found in Northwestern European countries.
 
+Let's look at another example:
+
 ```{r, message= FALSE, fig.width= 8, fig.height= 6}
 two <- geoheatmap(facet_data = internet_2015, 
            grid_data = europe_countries_grid1,
@@ -106,7 +108,7 @@ four <- geoheatmap(facet_data= internet_2015, grid_data= africa_countries_grid1,
            type = "seq", palette= "Greens", na.value= "grey50" )
 four + labs(title = "Internet Usage in Africa")
 ```
-
+With the manual breaks, it's a bit easier to spot that four countries surpassed the halfway mark of population Internet usage: Morocco, Mauritius, Seychelles and South Africa.
 
 ### Grid language options
 
