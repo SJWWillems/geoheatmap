@@ -1,0 +1,238 @@
+---
+title: "Introduction to geoheatmap"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to geoheatmap}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r positioning of logo, echo= FALSE, warning=FALSE}
+library(knitr)
+
+logo_path <- system.file("internal/geoheatmap.png", package = "geoheatmap")
+logo_uri <- image_uri(logo_path)
+htmltools::img(src = logo_uri, 
+               alt = 'logo', 
+               style = 'position:absolute; top:17px; right:17px; width:170px; border:none; outline:none')
+```
+
+# TO DO (remove this list later): 
+
+- remove graph names "one", "two" etc. Is that possible? Just add "+" at end of the first line of code?
+- change structure of code -> align arguments, etc.
+- remove interpretations of the plot as they are not necessarily relevant for how to make the plot? Or was this also done in other vignettes? 
+
+
+The geoheatmap R package aims to provide an easy way for building cartogram heatmaps for regions worldwide. 
+
+For the graph aesthetics, we took inspirations from the maps of the [statebins](https://github.com/hrbrmstr/statebins) package, and extended on its functionality by allowing for user-defined grids, which means that the cartogram heatmaps can also represent territories outside the US. Though any well-defined grid will technically work, grids from  [geofacet](https://github.com/hafen/geofacet) are an excellent starting point.
+
+
+## Installation and Setup
+
+The package `geoheatmap` imports grids from the [geofacet](https://github.com/hafen/geofacet) package, and also includes the option to make hoovering graphs, which is based on functionalities from the [plotly](https://github.com/plotly/plotly.R) package.
+
+```{r, eval= FALSE}
+install.packages("geoheatmap")
+```
+
+```{r setup, message=FALSE}
+library(geoheatmap)
+library(geofacet)
+library(plotly)
+
+library(viridisLite)
+```
+
+The use of package viridisLite here is to make colour-blind friendly graphical options for the examples below. 
+
+## Usage
+
+In this vignette we show multiple implementations of the package, namely for continuous data and discrete data, and we will show how users can specify the column with the grid names and can make an interactive (hoovering) plot instead of a stationary one. 
+
+### Dataset for examples
+
+The data used for the following examples is available in the geoheatmap package under the name `internet`, and is originally from the World Bank Group (2024), retrieved from https://data.worldbank.org/indicator/IT.NET.USER.ZS.
+
+```{r}
+data(internet, package = "geoheatmap")
+head(internet)
+```
+
+Internet.rda lists a good chunk of countries (`country`) worldwide, in an alphabetical and chronological order (`year`: 1990 - 2016), with the column `users` depicting the percentage of individuals in a given country having used internet in some capacity in the previous 3 months. 
+
+For the examples in this vignette, we use only the data from one year, specifically from 2015. 
+
+```{r}
+internet_2015 <- subset(internet, year == 2015)
+```
+
+
+### Continuous scale examples
+
+In the first example, a cartogram heatmap is shown for continuous data. This graph shows the internet usage across Europe with a gradient color scale and the `europe_countries_grid1` grid from the `geofacet` package. Though most countries are well above the halfway mark of population internet use, highest percentages can be found in Northwestern European countries.
+
+```{r, message= FALSE, fig.width= 8, fig.height= 6}
+one <- geoheatmap(facet_data= internet_2015, grid_data= europe_countries_grid1,
+           facet_col = "country", value_col = "users", 
+           low = "#56B1F7", high = "#132B43")
+one + labs(title = "2015 Internet Usage in Europe")
+
+```
+
+The gradient scale is the default for continuous data, but you are of course not limited to this default. You can change the fill scale via the `ggplot2_scale_function` argument, and add additional arguments to be passed down directly inside the function. 
+
+For example, if any middle point is of interest, also a divergent color scale can be applied for continuous data. This can be done by specifying the `scale_fill_gradient2` for the argument `ggplot2_scale_function` and adding the additional information for this scale (`low`, `mid`, `high`, `midpoint`). 
+
+
+```{r, message= FALSE, fig.width= 8, fig.height= 6}
+two <- geoheatmap(facet_data = internet_2015, 
+           grid_data = europe_countries_grid1,
+           facet_col = "country", 
+           value_col = "users",
+           name = "Internet users: divergent",
+           ggplot2_scale_function = scale_fill_gradient2, 
+           low =  viridis(10)[1], 
+           mid = "white", 
+           high = viridis(10)[8], 
+           midpoint = 75,  
+           round = TRUE)
+two + labs(title = "2015 Internet Usage in Europe")
+```
+
+
+Note that in this example we additionally set the argument `round = TRUE` to show the cartogram heatmap version with tiles with rounded corners. 
+
+
+### Discrete scale examples
+
+To show discrete data, users can either ask ggplot2 to bin the data or bin the data themselves. 
+
+In this first example, the data is binned by asking ggplot2 to bin the data via the `scale_fill_binned` function. This time we focus on Africa by using the grid `africa_countries_grid1` from the `geofacet` pacakage. The resulting graph shows how African countries differed in using the internet in year 2015, possibly tied to economic development of a given country. 
+
+
+```{r, message= FALSE, fig.width= 8, fig.height= 6}
+
+three <- geoheatmap(facet_data= internet_2015, grid_data= africa_countries_grid1,
+           facet_col = "country", value_col = "users",
+           name= "Internet users: binned",
+           ggplot2_scale_function = scale_fill_binned,
+           type= "viridis")
+three + labs(title = "Internet Usage in Africa")
+
+```
+
+Another option is to discretize our data ourselves, e.g. by specifying our own breaks, and to then plot this data as is done in the next graph.
+
+```{r}
+internet_2015$users_bin= cut(internet_2015$users, breaks = c(-Inf, 25, 50, Inf), labels = c("0-25", "26-50", "51 and up"))
+```
+
+```{r, message= FALSE, fig.width= 8, fig.height= 6}
+four <- geoheatmap(facet_data= internet_2015, grid_data= africa_countries_grid1,
+           facet_col = "country", value_col = "users_bin",
+           name= "Internet users: binned",
+           ggplot2_scale_function = scale_fill_brewer,
+           type = "seq", palette= "Greens", na.value= "grey50" )
+four + labs(title = "Internet Usage in Africa")
+```
+
+With the manual breaks we can, for example, put more focus on countries that surpassed the halfway mark (50\%) of population internet usage: Morocco, Mauritius, Seychelles and South Africa.
+
+### Grid language options
+
+Sometimes, grids have local as well as anglophone location names, with the default being set to the latter. If you would like to use the regional version (e.g. because your data frame operates with native names), you can pass it in as an additional argument using `merge_col`.
+
+As an example, let's look at the grid `de_states_grid1` that contains regions of Germany. In this grid, both `name` and `name_de` are available, with diverging state names in most cases. Via the `merge_col` argument, users can define which column they want to use in the cartogram.
+
+```{r}
+de_states_grid1
+```
+
+For illustration purposes, let's make up a dataset that works with state names native to a German speaker and plot this data as a cartogram heatmap.
+
+```{r dummy german, fig.width= 8, fig.height= 6}
+# Dummy data frame with German states and number of football teams
+football_teams= data.frame(state = c("Baden-Württemberg", "Bayern", 
+                                     "Berlin", "Brandenburg",
+                                     "Bremen", "Hamburg", 
+                                     "Hessen", "Mecklenburg-Vorpommern",
+                                     "Niedersachsen", "Nordrhein-Westfalen",
+                                     "Rheinland-Pfalz", "Saarland", 
+                                     "Sachsen", "Sachsen-Anhalt",
+                                     "Schleswig-Holstein", "Thüringen"),
+                           teams = c(18, 22, 8, 6, 4, 5, 14, 3, 
+                                     12, 28, 10, 3, 9, 5, 7, 4)
+                           )
+
+five <- geoheatmap(facet_data= football_teams,
+        grid_data= de_states_grid1,
+        facet_col = "state",value_col = "teams",merge_col = "name_de",
+        name= "No. of teams",
+        low = "lightblue", high = plasma(2)[1],
+        round = TRUE)
+five + labs(title = "Football teams in German states")
+
+```
+
+By specifying `merge_col = "name_de"`, the `geoheatmap()` function merges the correct data set and grid columns together before producing a plot. 
+Though purely fictional, this plot shows that Nordrhein-Westfalen state is leading in number of football teams, something the authors suspect to be true regardless, as the state is Germany's most populous. 
+
+### Interactive plots
+
+You also have the option to make any given plot created with `geoheatmap()` interactive with `plotly` directly in the function call, by specifying `hover = TRUE `. 
+
+```{r intercative, fig.width= 8, fig.height= 6}
+geoheatmap(facet_data= football_teams,
+        grid_data= de_states_grid1,
+        facet_col = "state",value_col = "teams",merge_col = "name_de",
+        name= "No. of teams",
+        low = "lightblue", high = plasma(2)[1],
+        hover = TRUE)
+```
+
+Note that this hovering option is only available for cartogram heatmaps with un-rounded tiles. This means that calling `round = TRUE` in conjunction with `hover = TRUE` does not work (yet).
+
+```{r false intercatice, fig.width=4, fig.height=2}
+geoheatmap(facet_data= football_teams,
+        grid_data= de_states_grid1,
+        facet_col = "state",value_col = "teams",merge_col = "name_de",
+        name= "No. of teams",
+        low = "lightblue", high = plasma(2)[1],
+        round = TRUE,
+        hover = TRUE)
+```
+
+
+## Grids
+
+In the above examples, we already saw three grids, but many more grids are available in the `geofacet` package. Additionally, users can specify their own grids. 
+
+### List available grids
+
+To get the list of names of available grids in the `geofacet` package so far, call:
+
+```{r}
+geofacet::get_grid_names()
+```
+
+This list is constantly being updated as authors of the geofacet made uploading your own grids possible. You can learn how to submit your own by following the steps in next section.
+
+### Creating your own grid
+
+For detailed instructions on creating a custom grid, see the "Creating your own grid" section in the `geofacet` vignette. You can find it at: https://cran.r-project.org/web/packages/geofacet/vignettes/geofacet.html
+
+## Theme
+
+The default theme is set to `theme_void()` as cartograms do not require axes etc., but this can be either overwritten, or added onto depending on intended plot purposes.
+
+
+
