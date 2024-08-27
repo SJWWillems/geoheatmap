@@ -3,10 +3,10 @@ Type: Package
 Title: Create Geospatial Cartogram Heatmaps
 Version: 0.1.0
 Authors@R: c(
-    person("Sanne", "Willems", email = "s.j.w.willems@fsw.leidenuniv.nl", role = c("cre", "aut")),
+    person("Sanne J.W.", "Willems", email = "s.j.w.willems@fsw.leidenuniv.nl", role = c("cre", "aut")),
     person("Maria", "Rados", email = "m.rados@umail.leidenuniv.nl", role = "aut"),
     person("Juan", "Claramunt Gonzalez", email = "j.claramunt.gonzalez@fsw.leidenuniv.nl", role = "ctb"))
-Maintainer: S.J.W. Willems <s.j.w.willems@fsw.leidenuniv.nl>
+Maintainer: Sanne J.W. Willems <s.j.w.willems@fsw.leidenuniv.nl>
 Description: The functionality provided by this package is an expansion of the code 
     by creators of the `statebins` package. It allows for the creation of square choropleths 
     for the entire world, provided an appropriate specified grid is supplied. 
