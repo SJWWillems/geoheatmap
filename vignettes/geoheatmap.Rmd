@@ -26,12 +26,12 @@ htmltools::img(src = logo_uri,
 
 The geoheatmap R package aims to provide an easy way for building cartogram heatmaps for regions worldwide. 
 
-For the graph aesthetics, we took inspirations from the maps of the [statebins](https://github.com/hrbrmstr/statebins) package, and extended on its functionality by allowing for user-defined grids, which means that the cartogram heatmaps can also represent territories outside the US. Though any well-defined grid will technically work, grids from  [geofacet](https://github.com/hafen/geofacet) are an excellent starting point.
+For the graph aesthetics, we took inspirations from the maps of the [statebins](https://CRAN.R-project.org/package=statebins) package, and extended on its functionality by allowing for user-defined grids, which means that the cartogram heatmaps can also represent territories outside the US. Though any well-defined grid will technically work, grids from  [geofacet](https://CRAN.R-project.org/package=geofacet) are an excellent starting point.
 
 
 ## Installation and Setup
 
-The package `geoheatmap` imports grids from the [geofacet](https://github.com/hafen/geofacet) package, and also includes the option to make hoovering graphs, which is based on functionalities from the [plotly](https://github.com/plotly/plotly.R) package.
+The package `geoheatmap` imports grids from the [geofacet](https://CRAN.R-project.org/package=geofacet) package, and also includes the option to make hovering graphs, which is based on functionalities from the [plotly](https://CRAN.R-project.org/package=plotly) package.
 
 ```{r, eval= FALSE}
 install.packages("geoheatmap")
@@ -48,7 +48,7 @@ The use of package viridisLite here is to make colour-blind friendly graphical o
 
 ## Usage
 
-In this vignette we show multiple implementations of the package, namely for continuous data and discrete data, and we will show how users can specify the column with the grid names and can make an interactive (hoovering) plot instead of a stationary one. 
+In this vignette we show multiple implementations of the package, namely for continuous data and discrete data, and we will show how users can specify the column with the grid names and can make an interactive (hovering) plot instead of a stationary one. 
 
 ### Dataset for examples
 
@@ -220,7 +220,7 @@ This list is constantly being updated as authors of the geofacet made uploading 
 
 ### Creating your own grid
 
-For detailed instructions on creating a custom grid, see the "Creating your own grid" section in the `geofacet` vignette. You can find it at: https://cran.r-project.org/web/packages/geofacet/vignettes/geofacet.html
+For detailed instructions on creating a custom grid, see the "Creating your own grid" section in the `geofacet` vignette. You can find it at: https://cran.r-project.org/package=geofacet/vignettes/geofacet.html
 
 ## Theme
 
